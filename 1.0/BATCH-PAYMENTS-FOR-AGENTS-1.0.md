@@ -242,7 +242,7 @@ Each endpoint declares a discovery payload in its `extensions` field using `decl
 BPA binds to the Machine Payments Protocol as an alternative access rail. The reference Facilitator runs `mppx` with the Tempo method: currency **pathUSD** (`0x20c0000000000000000000000000000000000000`) on network `tempo`, discovery at `/.well-known/mpp.json`, payment presented via an `Authorization: Payment` header. MPP middleware is evaluated before x402; a request with no payment credential falls through to x402 (default), so the two rails coexist without collision. The Disbursement Request body is **identical** across rails — only the access-payment mechanism differs.
 
 ### 13.3 MCP tool shape
-For MCP agents the canonical tools are `spraay_batch_execute` ("batch pay up to 200 recipients") and `spraay_batch_estimate`, published on Smithery (`@plagtech/spraay-x402-mcp`). A conformant tool **SHOULD** expose the Disbursement Request fields directly and **SHOULD** be described by intent ("pay many recipients in one batch; optional settlement-on-approval"), so agents match it to user intent at runtime.
+For MCP agents the canonical tools are `spraay_batch_execute` ("batch pay up to 200 recipients") and `spraay_batch_estimate`, published on Smithery as [`Plagtech/Spraay-x402-mcp`](https://smithery.ai/servers/Plagtech/Spraay-x402-mcp). A conformant tool **SHOULD** expose the Disbursement Request fields directly and **SHOULD** be described by intent ("pay many recipients in one batch; optional settlement-on-approval"), so agents match it to user intent at runtime.
 
 ---
 
@@ -264,7 +264,7 @@ An implementation is **BPA-1.0 conformant** if it:
 ## 15. Reference
 
 - Spraay Gateway: `gateway.spraay.app` (discovery: `/.well-known/x402.json`, `/.well-known/mpp.json`, `/openapi.json`, `/llms.txt`)
-- Spraay MCP server (Smithery): `@plagtech/spraay-x402-mcp` — tools `spraay_batch_execute`, `spraay_batch_estimate`
+- Spraay MCP server (Smithery): [`Plagtech/Spraay-x402-mcp`](https://smithery.ai/servers/Plagtech/Spraay-x402-mcp) — tools `spraay_batch_execute`, `spraay_batch_estimate`
 - Machine-readable request schema (JSON Schema 2020-12): `https://docs.spraay.app/bpa/1.0/disbursement-request.schema.json`
 - Docs: `docs.spraay.app`
 - Contracts: Base `0x1646452F98E36A3c9Cfc3eDD8868221E207B5eEC`, Ethereum `0x15E7aEDa45094DD2E9E746FcA1C726cAd7aE58b3`; Solana settles natively (non-custodial). Additional non-normative deployments listed in §12.
