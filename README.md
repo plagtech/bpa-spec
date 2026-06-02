@@ -36,7 +36,7 @@ Both EVM contracts are source-verified (exact match). On-chain protocol fee is 3
 ## Using it
 
 - **Reference Facilitator:** `gateway.spraay.app` — discovery at `/.well-known/x402.json`, `/.well-known/mpp.json`, `/openapi.json`, `/llms.txt`.
-- **MCP (Smithery):** `@plagtech/spraay-x402-mcp` — tools `spraay_batch_execute`, `spraay_batch_estimate`.
+- **MCP (Smithery):** [`Plagtech/Spraay-x402-mcp`](https://smithery.ai/servers/Plagtech/Spraay-x402-mcp) — tools `spraay_batch_execute`, `spraay_batch_estimate`.
 - **Validate a request** against [`1.0/disbursement-request.schema.json`](1.0/disbursement-request.schema.json) before sending.
 
 ## Conformance
