@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://docs.spraay.app/bpa/1.0/disbursement-request.schema.json",
+  "title": "BPA Disbursement Request",
+  "description": "Batch Payments for Agents (BPA) 1.0 — request object for a single logical batch disbursement. See the BPA 1.0 specification, section 4.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["bpa_version", "idempotency_key", "chain", "asset", "recipients"],
+  "properties": {
+    "bpa_version": {
+      "description": "Spec version. MUST be '1.0'.",
+      "const": "1.0"
+    },
+    "idempotency_key": {
+      "description": "Unique key per logical batch. Replays with the same key MUST NOT initiate a second settlement (BPA §5).",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "chain": {
+      "description": "CAIP-2 chain identifier. Core rails: 'eip155:8453' (Base), 'eip155:1' (Ethereum), 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' (Solana mainnet).",
+      "type": "string",
+      "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$"
+    },
+    "asset": {
+      "description": "Token contract address (EVM), mint (Solana), or native symbol (e.g. 'ETH').",
+      "type": "string",
+      "minLength": 1
+    },
+    "trigger": {
+      "description": "When the batch settles. Defaults to 'immediate' if omitted.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["immediate", "on_approval", "on_condition"],
+          "default": "immediate"
+        },
+        "condition_ref": {
+          "description": "Stable, independently verifiable reference to the gating condition. REQUIRED when type = 'on_condition' (BPA §8).",
+          "type": "string"
+        }
+      },
+      "required": ["type"],
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "on_condition" } } },
+          "then": { "required": ["condition_ref"] }
+        }
+      ]
+    },
+    "recipients": {
+      "description": "Ordered set of payout lines. At least one. The reference Base/Ethereum contract caps a single call at 200; larger batches MUST be chunked under one idempotency_key (BPA §4).",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["address", "amount"],
+        "properties": {
+          "address": {
+            "description": "Recipient address on the named chain.",
+            "type": "string",
+            "minLength": 1
+          },
+          "amount": {
+            "description": "Amount in the asset's base units, as an integer string (no decimals/floats).",
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          },
+          "ref": {
+            "description": "Optional caller-supplied line id, echoed in per-recipient results.",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "policy_ref": {
+      "description": "Optional id of the policy to evaluate before settlement (BPA §10).",
+      "type": "string"
+    },
+    "metadata": {
+      "description": "Optional caller metadata.",
+      "type": "object",
+      "properties": {
+        "purpose": { "type": "string" },
+        "external_id": { "type": "string" }
+      }
+    }
+  }
+}
